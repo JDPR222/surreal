@@ -1,9 +1,12 @@
-import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState('/inicio');
+  const [isOpen, setIsOpen] = useState(true);
+  const location = useLocation(); // Obtiene la ubicación actual
+  const [activeLink, setActiveLink] = useState(location.pathname); // Inicializa el estado activo con la ruta actual
+
+
 
   const navLinks = [
     { to: "/inicio", text: "Inicio" },
@@ -16,8 +19,13 @@ const Navbar = () => {
     { to: "/contacto", text: "Contacto" },
   ];
 
+  useEffect(() => {
+    setActiveLink(location.pathname); // Actualiza el estado activo cuando la ubicación cambia
+  }, [location]);
+
   const handleLinkClick = (to) => {
     setActiveLink(to);
+    setActiveLink(activeLink)
     setIsOpen(false);
   };
 
@@ -34,8 +42,13 @@ const Navbar = () => {
         <nav className="flex w-full screen-max-width">
           <ul className="flex flex-1 justify-center max-sm:hidden">
             {navLinks.map((link, index) => (
-              <NavLink key={index} to={link.to} className={`flex-nowrap ${link.to === activeLink ? "active" : ""}`} onClick={() => handleLinkClick(link.to)}>
-                <li className="flex-nowrap border-r-2 border-amber-500 px-3 py-1  text-sm cursor-pointer  hover:bg-[#292b2958]  text-gray hover:text-white transition-all">
+              <NavLink 
+                key={index} 
+                to={link.to} 
+                className={`flex-nowrap ${link.to === activeLink ? "active hover:bg-[#292b2958]" : ""}`} 
+                onClick={() => handleLinkClick(link.to)}
+              >
+                <li className={`flex-nowrap border-r-2 border-amber-500 px-3 py-1 text-sm cursor-pointer transition-all ${link.to === activeLink ? "bg-[#292b2958]" : "hover:bg-[#292b2958]"} text-gray hover:text-white`}>
                   {link.text}
                 </li>
               </NavLink>
